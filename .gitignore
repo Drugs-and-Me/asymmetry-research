@@ -1,0 +1,7 @@
+.image-config.json
+.vscode
+ppts/
+write_up/
+figures/dev_write_up/
+figures/old/
+figures/*.svg
