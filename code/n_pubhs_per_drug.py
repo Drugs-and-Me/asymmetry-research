@@ -71,7 +71,7 @@ file = './../data/ppy_drugs.csv'
 raw = pd.read_csv(file)
 
 # %%
-drugs = raw.iloc[:,1:16]
+drugs = raw.iloc[:,1:17]
 years = raw.iloc[:, 0]
 
 # Drugs by schedules (US, 2019)
@@ -117,7 +117,7 @@ def fig_2_indv(data, sch_color, max_y, steps, dict_params):
     ax.plot(years, raw[data], color = sch_cols[sch_color], label=data, lw = lwD)
     ax.plot(years, pred_t, color='black', alpha=0.8, linestyle='--', lw = lwDf)
 
-    dict_params[data] = {'r_square': r_square, 'a': a, 'b': b}
+    dict_params[data] = {'r_square': r_square, 'a_init': a, 'g_rate': b}
 
     ax.set_ylabel('Number of publications', labelpad=20)
     ax.set_xlabel('Years', labelpad=20)
@@ -167,13 +167,13 @@ params_sche = fig_2_indv('Psilocybin', 'sched_I', 150, 25, params_sche)
 params_sche = fig_2_indv('Khat', 'sched_I', 125, 25, params_sche)
 
 # %% 'Cannabis'
-params_sche = fig_2_indv('Cannabis', 'sched_I', 5000, 500, params_sche)
+params_sche = fig_2_indv('Cannabis', 'sched_I', 5000, 1000, params_sche)
 
 # %% 'MDMA'
-params_sche = fig_2_indv('MDMA', 'sched_I', 500, 50, params_sche)
+params_sche = fig_2_indv('MDMA', 'sched_I', 500, 100, params_sche)
 
 # %% 'LSD'
-params_sche = fig_2_indv('LSD', 'sched_I', 450, 50, params_sche)
+params_sche = fig_2_indv('LSD', 'sched_I', 500, 100, params_sche)
 
 # %% 'Heroin'
 params_sche = fig_2_indv('Heroin', 'sched_I', 1200, 200, params_sche)
@@ -185,13 +185,13 @@ params_sche = fig_2_indv('Cocaine', 'sched_II', 2500, 500, params_sche)
 params_sche = fig_2_indv('Amphetamines', 'sched_II', 1200, 200, params_sche)
 
 # %% 'Methamphetamines'
-params_sche = fig_2_indv('Methamphetamines', 'sched_II', 1000, 100, params_sche)
+params_sche = fig_2_indv('Methamphetamines', 'sched_II', 1000, 200, params_sche)
 
 # %% 'Methadone'
-params_sche = fig_2_indv('Methadone', 'sched_II', 1000, 100, params_sche)
+params_sche = fig_2_indv('Methadone', 'sched_II', 1000, 200, params_sche)
 
 # %% 'Ketamine'
-params_sche = fig_2_indv('Ketamine', 'sched_III', 1500, 150, params_sche)
+params_sche = fig_2_indv('Ketamine', 'sched_III', 1500, 250, params_sche)
 
 # %% 'GHB'
 params_sche = fig_2_indv('GHB', 'sched_III', 150, 25, params_sche)
@@ -201,6 +201,36 @@ params_sche = fig_2_indv('Benzodiazepines', 'sched_IV', 1500, 250, params_sche)
 
 # %% 'Codeine'
 params_sche = fig_2_indv('Codeine', 'sched_V', 300, 50, params_sche)
+
+# %% LEGEND SCHEDULES
+fig, ax = plt.subplots(figsize = (18, 15))
+
+ax.spines['right'].set_visible(False)
+ax.spines['left'].set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+sI = mlines.Line2D([], [], color='#3388A6', label = 'Schedule I')
+sII = mlines.Line2D([], [], color='#5ABE8A', label = 'Schedule II')
+sIII = mlines.Line2D([], [], color='#ff8c00', label = 'Schedule III')
+sIV = mlines.Line2D([], [], color='#FFDC01', label = 'Schedule IV')
+sV = mlines.Line2D([], [], color='#e96c6c', label = 'Schedule V')
+leg = mlines.Line2D([], [], color='#5F4B8B', label = 'Legal')
+
+leg = ax.legend(handles=[sI, sII, sIII, sIV, sV, leg], bbox_to_anchor=(1.05, 0.75), ncol=2)
+
+leg.get_frame().set_facecolor('none')
+leg.get_frame().set_linewidth(0.0)
+
+for lo in leg.legendHandles:
+    lo.set_linewidth(20)
+
+ax.tick_params(left=False,
+                bottom=False,
+                labelleft=False,
+                labelbottom=False)
+
+plt.savefig(f'./../figures/dev_write_up/solo_legend.png', transparent = True, bbox_inches='tight')
 
 # %% Figure 2 fitting by schedule
 def fig_2_sche(data, color, lineswag, name_file, max_y, steps, dict_params):
@@ -221,7 +251,7 @@ def fig_2_sche(data, color, lineswag, name_file, max_y, steps, dict_params):
         ax.plot(years, raw[z], color = color, label=z, linestyle=lineswag[i], lw = lwD)
         ax.plot(years, pred_t, color='black', alpha=0.6, lw = lwDf)
 
-        dict_params[z] = {'r_square': r_square, 'a': a, 'b': b}
+        dict_params[z] = {'r_square': r_square, 'a_init': a, 'g_rate': b}
 
     ax.set_ylabel('Number of publications', labelpad=20)
     ax.set_xlabel('Years', labelpad=20)
@@ -254,13 +284,13 @@ def fig_2_sche(data, color, lineswag, name_file, max_y, steps, dict_params):
 
     return dict_params
 
-params_sche = {}
+# params_sche = {}
 
 # %% Schedule I
 
 ls_sched_I = ['-', '-', '-']
 
-fig_2_sche(sched_I, blue_moon,ls_sched_I, 'sche_I', 1200, 200, params_sche)
+# fig_2_sche(sched_I, blue_moon,ls_sched_I, 'sche_I', 1200, 200, params_sche)
 
 # %% plots fitted
 
@@ -400,6 +430,110 @@ t = np.arange(0, 16, 1)
 for i, k in enumerate(dict_params.keys()):
     rs_ds[k] = [dict_params[k]['r_square'], dict_params[k]['g_rate'], dict_params[k]['a_init']]
 
+# %%
+order_sched = ['MDMA', 'LSD', 'Heroin', 'Psilocybin', 'Khat', 'Cannabis',
+
+                'Cocaine', 'Amphetamines', 'Methamphetamines', 'Methadone',
+
+                'Ketamine', 'GHB', 
+                'Benzodiazepines', 
+                'Codeine', 
+                'Alcohol',
+                'WoS']
+
+r_squares_sched = []
+for ore in order_sched:
+    print(ore)
+    r_squares_sched.append(rs_ds[ore][0])
+
+# %%
+
+fig, ax = plt.subplots(figsize = (18, 15))
+
+lwD = 10
+widthtick = 15
+lenD = 20
+s_bub = 150
+
+colobars_sched = [ blue_moon, blue_moon, blue_moon, blue_moon, blue_moon, blue_moon,
+            green_dnm, green_dnm, green_dnm, green_dnm, dark_orange, dark_orange,
+            v_yellow, pink_dnm, ultra_violet, 'k']
+
+ys = np.linspace(0, 56, len(r_squares_sched))
+ax.barh(ys, width = r_squares_sched[::-1], color=colobars_sched[::-1], height=2)
+
+# ax.set_axis_off()
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+# ax.axes.xaxis.set_visible(False)
+ax.set_yticks(ys)
+
+labels = [item.get_text() for item in ax.get_yticklabels()]
+
+for i, l in enumerate(labels):
+    labels[i] = order_sched[::-1][i]
+
+ax.set_yticklabels(labels)
+
+# cb.ax.get_yaxis().labelpad = 45
+ax.set_xlabel('$R^2$', labelpad=20)
+ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
+ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
+ax.tick_params(axis='y', which='major', pad=30)
+ax.tick_params(axis='x', which='major', pad=10)
+ax.spines['left'].set_linewidth(lwD)
+ax.spines['bottom'].set_linewidth(lwD)
+
+ax.set_xlim([0, 1])
+# ax.set_ylim([1, 58])
+
+# # name_file = 'heatmap_r_values'
+plt.tight_layout(pad=1.6)
+name_file = 'hbars_r_values_ORD_sched'
+plt.savefig('./../figures/dev_write_up/{}.png'.format(name_file), transparent = True, bbox_inches='tight')
+
+# %%
+
+bses_squares_sched = []
+for ore in order_sched:
+    bses_squares_sched.append(rs_ds[ore][1])
+
+# %%
+
+fig, ax = plt.subplots(figsize = (18, 15))
+
+ys = np.linspace(0, 56, len(bses_squares_sched))
+ax.barh(ys, width = bses_squares_sched[::-1], color=colobars_sched[::-1], height=2)
+
+ax.yaxis.set_ticks(ys)
+ax.xaxis.set_ticks(np.arange(0, 0.201, 0.05))
+
+labels = [item.get_text() for item in ax.get_yticklabels()]
+
+for i, l in enumerate(labels):
+    labels[i] = order_sched[::-1][i]
+
+ax.set_yticklabels(labels)
+
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
+ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
+
+ax.spines['left'].set_linewidth(lwD)
+ax.spines['bottom'].set_linewidth(lwD)
+
+ax.tick_params(axis='y', which='major', pad=30)
+ax.tick_params(axis='x', which='major', pad=10)
+
+ax.set_xlabel('Growth rate (r)', labelpad=20)
+
+plt.tight_layout(pad=1.6)
+name_file = 'exp_hbars_sched_ORD'
+plt.savefig('./../figures/dev_write_up/{}.png'.format(name_file), transparent = True, bbox_inches='tight')
+
+# %% R-square values coloured by schedule ORDERED MAX TO LOW
 sort_orders_r2 = sorted(rs_ds.items(), key=lambda x: x[1][0], reverse=True)
 sort_orders_r = sorted(rs_ds.items(), key=lambda x: x[1][1], reverse=True)
 sort_orders_init = sorted(rs_ds.items(), key=lambda x: x[1][2], reverse=True)
@@ -416,7 +550,7 @@ for i, k in enumerate(sort_orders_init):
     ases[i] = k[1][2]
     drugs_init.append(k[0])
 
-# %% R-square values coloured by schedule
+# %%
 fig, ax = plt.subplots(figsize = (18, 15))
 
 lwD = 10
@@ -518,7 +652,6 @@ sched_IV = ['Benzodiazepines'] #v_yellow
 sched_V = ['Codeine'] #pink_dnm
 legal = ['Alcohol'] #ultra_violet
 wos = ['WoS'] #'k'
-
 
 
 colobars_g = [blue_moon, blue_moon, blue_moon, green_dnm, dark_orange, ultra_violet, blue_moon, green_dnm,
@@ -632,7 +765,7 @@ def rgr(drs, ys, data):
             # print(log_future - log_present)
             # print(ys[i+1] - ys[i])
             rgr_step = (log_future - log_present) / float((ys[i+1] - ys[i]))
-            print(rgr_step)
+            # print(rgr_step)
             rgr_drug[i] = rgr_step
         except Exception as e: 
             print(e)
@@ -678,59 +811,10 @@ def fig_3_sched(data, color, name_file):
     phalpha = [1, 0.5, 0.1]
 
     for i, z in enumerate(data):
-        print(1 - (1/len(data))* i)
+        print(1 - (1/len(data))* i*1.4)
         ax.plot(years[1:], rgr_all[z], color = color[i], label = z, alpha = 1,lw = lwD) #linestyle=ls[i])
 
-    ax.hlines(0, 1970, 2018, lw = 4, linestyle='--')
-    # ax.set_title(title)
-    ax.set_ylabel('Relative Growth Rate', labelpad=20)
-    ax.set_xlabel('Years', labelpad=20)
-
-    ax.set_xticks([1960, 1970, 1980, 1990, 2000, 2010, 2018])
-
-    ax.set_xlim([1969, 2019])
-    ax.set_ylim([-0.4, 0.4])
-    ax.set_yticks(np.arange(-0.4, 0.5, 0.2))
-
-    ax.spines['left'].set_linewidth(lwD)
-    ax.spines['bottom'].set_linewidth(lwD)
-    ax.spines['right'].set_linewidth(lwD)
-
-    ax.spines['right'].set_visible(False)
-    ax.spines['top'].set_visible(False)
-
-    ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
-    ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
-
-    leg = ax.legend(loc='top right', bbox_to_anchor=(1, 0.3))
-    leg.get_frame().set_facecolor('none')
-    leg.get_frame().set_linewidth(0.0)
-
-    # plt.tight_layout()
-    plt.savefig('./../figures/dev_write_up/{}.png'.format(name_file), transparent = True, bbox_inches='tight')
-
-
-fig_3_sched(sched_Irgr[:3], ['#3182bd', '#9ecae1', '#deebf7'], 'sched_I')
-
-# %%
-
-# One graph per category, one colour and then do opacity gradient
-# keep colour code throughout paper
-# FIX Y AXIS
-
-def fig_3_rgr(data, color, title, name_file):
-    fig, ax = plt.subplots(figsize = (18, 15))
-    
-    lwD = 15
-    widthtick = 15
-    lenD = 20
-    s_bub = 15
-
-    for i, z in enumerate(data):
-        print(1 - (1/len(data))* i)
-        ax.plot(years[1:], rgr_all[z], color = color, label = z, alpha = (1 - (1/len(data))* i), lw = lwD*1.8)
-    
-    ax.hlines(0, 1970, 2018, lw = 4, linestyle='--')
+    ax.hlines(0, 1970, 2018, lw = 4, linestyle='--', color ='k')
     # ax.set_title(title)
     ax.set_ylabel('Relative Growth Rate', labelpad=20)
     ax.set_xlabel('Years', labelpad=20)
@@ -751,7 +835,79 @@ def fig_3_rgr(data, color, title, name_file):
     ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
     ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
 
-    leg = ax.legend(loc='top right', bbox_to_anchor=(1, 0.3))
+    leg = ax.legend(loc='upper right', bbox_to_anchor=(1, 0.4))
+    leg.get_frame().set_facecolor('none')
+    leg.get_frame().set_linewidth(0.0)
+
+    # plt.tight_layout()
+    plt.savefig('./../figures/dev_write_up/{}.png'.format(name_file), transparent = True, bbox_inches='tight')
+
+# %% Schedule I
+fig_3_sched(sched_Irgr[:3], ['#235f74', '#3388a6', '#99c3d2'], 'sched_I_lsd_md_hero')
+
+# %% Schedule I
+fig_3_sched(sched_Irgr[3:], ['#235f74', '#3388a6', '#99c3d2'], 'sched_I_psilo_khat_cann')
+
+# %% Schedule II
+fig_3_sched(sched_IIrgr, ['#1b3929', '#3e8560', '#5abe8a', '#9cd8b8'], 'sched_II')
+
+# %% Schedule III
+fig_3_sched(sched_IIIrgr, ['#cc7000', '#ffae4c'], 'sched_III')
+
+# %% Schedule IV
+fig_3_sched(sched_IVrgr, [v_yellow], 'sched_IV')
+
+# %% Schedule V
+fig_3_sched(sched_Vrgr, [pink_dnm], 'sched_V')
+
+# %% Legal
+fig_3_sched(legalrgr, [ultra_violet], 'legal')
+
+# %% WoS
+fig_3_sched(wosrgr, ['k'], 'wos_rgr')
+
+# %%
+
+
+# %%
+# One graph per category, one colour and then do opacity gradient
+# keep colour code throughout paper
+# FIX Y AXIS
+
+def fig_3_rgr(data, color, title, name_file):
+    fig, ax = plt.subplots(figsize = (18, 15))
+    
+    lwD = 15
+    widthtick = 15
+    lenD = 20
+    s_bub = 15
+
+    for i, z in enumerate(data):
+        print(1 - (1/len(data))* i)
+        ax.plot(years[1:], rgr_all[z], color = color, label = z, alpha = (1 - (1/len(data))* i*1.2), lw = lwD*1.8)
+    
+    ax.hlines(0, 1970, 2018, lw = 4, linestyle='--', color = 'k')
+    # ax.set_title(title)
+    ax.set_ylabel('Relative Growth Rate', labelpad=20)
+    ax.set_xlabel('Years', labelpad=20)
+
+    ax.set_xticks([1960, 1970, 1980, 1990, 2000, 2010, 2018])
+
+    ax.set_xlim([1970, 2018])
+    ax.set_ylim([-0.4, 0.4])
+    ax.set_yticks(np.arange(-0.4, 0.5, 0.2))
+
+    ax.spines['left'].set_linewidth(lwD)
+    ax.spines['bottom'].set_linewidth(lwD)
+    ax.spines['right'].set_linewidth(lwD)
+
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+
+    ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
+    ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
+
+    leg = ax.legend(loc='upper right', bbox_to_anchor=(1, 0.3))
     leg.get_frame().set_facecolor('none')
     leg.get_frame().set_linewidth(0.0)
 
@@ -790,6 +946,65 @@ for i, y in enumerate(perc_y.index):
     perc_y.loc[y] = np.round(100*np.asarray(raw.iloc[i, 1:-1]/sum(raw.iloc[i, 1:-1])), 2)
 
 # %% PLOT
+
+
+scheds_drugs_indvs = {'MDMA': '#0a1b21', 
+    'LSD': '#1e5163', 
+    'Heroin': '#2d7a95',
+    'Psilocybin': '#4793ae',
+    'Khat': '#84b7c9', 
+    'Cannabis': '#eaf3f6',
+    'Cocaine': '#1b3929',
+    'Amphetamines': '#3e8560',
+    'Methamphetamines': '#7acba1',
+    'Methadone': '#bde5d0',
+    'Ketamine': '#cc7000', 
+    'GHB': '#ffae4c',
+    'Benzodiazepines': '#FFDC01',
+    'Codeine': '#e96c6c',
+    'Alcohol': '#5F4B8B'}
+
+scheds_drugs_cols = {'MDMA': '#3388A6', 
+    'LSD': '#3388A6', 
+    'Heroin': '#3388A6',
+    'Psilocybin': '#3388A6',
+    'Khat': '#3388A6', 
+    'Cannabis': '#3388A6',
+    'Cocaine': '#5ABE8A',
+    'Amphetamines': '#5ABE8A',
+    'Methamphetamines': '#5ABE8A',
+    'Methadone': '#5ABE8A',
+    'Ketamine': '#ff8c00',
+    'GHB': '#ff8c00',
+    'Benzodiazepines': '#FFDC01',
+    'Codeine': '#e96c6c',
+    'Alcohol': '#5F4B8B'}
+
+cats_drugs_cols = {
+    'MDMA': '#e9c7df', 
+
+    'LSD': '#87abda', 
+    'Psilocybin': '#87abda',
+
+    'Cannabis': '#857fe3',
+
+    'Khat': '#ee7f96',
+    'Cocaine': '#ee7f96',
+    'Amphetamines': '#ee7f96',
+    'Methamphetamines': '#ee7f96',
+
+    'Methadone': '#b7d433',
+    'Heroin': '#b7d433',
+    'Codeine': '#b7d433',
+
+    'Ketamine': '#c1addb',
+
+    'GHB': '#ffa512',
+    'Benzodiazepines': '#ffa512',
+    'Alcohol': '#ffa512'}
+
+# %%
+
 fig, ax = plt.subplots(figsize=(28,15))  
 lwD = 10
 widthtick = 15
@@ -798,13 +1013,13 @@ s_bub = 150
 
 margin_bottom = np.zeros(len(raw.iloc[:, 0]))
 
-for i, drug in enumerate(perc_y.columns):
+for i, drug in enumerate(list(scheds_drugs_cols.keys())[::-1]):
     # print(i)
     perc_dru_t = perc_y[drug]
     # print(perc_dru_t)
 
     ax.bar(perc_y.index.values, perc_dru_t,
-                bottom = margin_bottom, label=drug, color=coloh[drug][0], alpha=coloh[drug][1])
+                bottom = margin_bottom, label=drug, color=scheds_drugs_indvs[drug], alpha=coloh[drug][1])
     margin_bottom += perc_dru_t
 
 ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
@@ -825,16 +1040,184 @@ ax.spines['right'].set_linewidth(lwD)
 ax.spines['right'].set_visible(False)
 ax.spines['top'].set_visible(False)
 
-leg = ax.legend(bbox_to_anchor=(1.05, 0.75), ncol=2)
+handles, labels = ax.get_legend_handles_labels()
+leg = ax.legend(handles[::-1], labels[::-1], bbox_to_anchor=(1.05, 0.75), ncol=2)
+leg.get_frame().set_facecolor('none')
+leg.get_frame().set_linewidth(0.0)
+
+name_file = 'time_pie_chart_sched_indv'
+plt.savefig('./../figures/dev_write_up/{}.png'.format(name_file), transparent = True, bbox_inches='tight')
+name_file = 'figure5_time_pie_chart_sched_indv'
+plt.savefig('./../figures/final_paper/{}.pdf'.format(name_file), transparent = True, bbox_inches='tight')
+
+# %%
+
+fig, ax = plt.subplots(figsize=(28,15))  
+lwD = 10
+widthtick = 15
+lenD = 20
+s_bub = 150
+
+margin_bottom = np.zeros(len(raw.iloc[:, 0]))
+
+for i, drug in enumerate(list(scheds_drugs_cols.keys())[::-1]):
+    # print(i)
+    perc_dru_t = perc_y[drug]
+    # print(perc_dru_t)
+
+    ax.bar(perc_y.index.values, perc_dru_t,
+                bottom = margin_bottom, label=drug, color=scheds_drugs_indvs[drug], alpha=coloh[drug][1])
+    margin_bottom += perc_dru_t
+
+ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
+ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
+
+ax.set_ylabel('%', labelpad=20)
+ax.set_xlabel('Year', labelpad=20)
+ax.set_ylim(60, 100)
+ax.set_xlim([1959, 2019])
+
+ax.set_xticks([1960, 1970, 1980, 1990, 2000, 2010, 2018])
+
+
+ax.spines['left'].set_linewidth(lwD)
+ax.spines['bottom'].set_linewidth(lwD)
+ax.spines['right'].set_linewidth(lwD)
+
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+handles, labels = ax.get_legend_handles_labels()
+leg = ax.legend(handles[::-1], labels[::-1], bbox_to_anchor=(1.05, 0.75), ncol=2)
 leg.get_frame().set_facecolor('none')
 leg.get_frame().set_linewidth(0.0)
 
 # plt.tight_layout()
 
-name_file = 'time_pie_chart'
+name_file = 'time_pie_chart_inset'
 plt.savefig('./../figures/dev_write_up/{}.png'.format(name_file), transparent = True, bbox_inches='tight')
-name_file = 'figure5_time_pie_chart'
 plt.savefig('./../figures/final_paper/{}.pdf'.format(name_file), transparent = True, bbox_inches='tight')
+
+
+# %%
+
+fig, ax = plt.subplots(figsize=(28,15))  
+lwD = 10
+widthtick = 15
+lenD = 20
+s_bub = 150
+
+margin_bottom = np.zeros(len(raw.iloc[:, 0]))
+
+for i, drug in enumerate(list(scheds_drugs_cols.keys())[::-1]):
+    # print(i)
+    perc_dru_t = perc_y[drug]
+    print(drug)
+
+    ax.bar(perc_y.index.values, perc_dru_t,
+                bottom = margin_bottom, label=drug, color=scheds_drugs_cols[drug], alpha=1)
+    margin_bottom += perc_dru_t
+
+ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
+ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
+
+ax.set_ylabel('%', labelpad=20)
+ax.set_xlabel('Year', labelpad=20)
+ax.set_ylim(0, 100)
+ax.set_xlim([1959, 2019])
+
+ax.set_xticks([1960, 1970, 1980, 1990, 2000, 2010, 2018])
+
+
+ax.spines['left'].set_linewidth(lwD)
+ax.spines['bottom'].set_linewidth(lwD)
+ax.spines['right'].set_linewidth(lwD)
+
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+sI = mlines.Line2D([], [], color='#3388A6', label = 'Schedule I')
+sII = mlines.Line2D([], [], color='#5ABE8A', label = 'Schedule II')
+sIII = mlines.Line2D([], [], color='#ff8c00', label = 'Schedule III')
+sIV = mlines.Line2D([], [], color='#FFDC01', label = 'Schedule IV')
+sV = mlines.Line2D([], [], color='#e96c6c', label = 'Schedule V')
+leg = mlines.Line2D([], [], color='#5F4B8B', label = 'Legal')
+
+leg = ax.legend(handles=[sI, sII, sIII, sIV, sV, leg], bbox_to_anchor=(1.05, 0.75), ncol=2)
+
+leg.get_frame().set_facecolor('none')
+leg.get_frame().set_linewidth(0.0)
+
+for lo in leg.legendHandles:
+    lo.set_linewidth(20)
+
+# plt.tight_layout()
+
+name_file = 'time_pie_chart_by_schedule'
+plt.savefig('./../figures/dev_write_up/{}.png'.format(name_file), transparent = True, bbox_inches='tight')
+name_file = 'figure5_time_pie_chart_by_schedule'
+plt.savefig('./../figures/final_paper/{}.pdf'.format(name_file), transparent = True, bbox_inches='tight')
+
+# %%
+
+fig, ax = plt.subplots(figsize=(28,15))  
+lwD = 10
+widthtick = 15
+lenD = 20
+s_bub = 150
+
+margin_bottom = np.zeros(len(raw.iloc[:, 0]))
+
+for i, drug in enumerate(list(cats_drugs_cols.keys())[::-1]):
+    # print(i)
+    perc_dru_t = perc_y[drug]
+    print(drug)
+
+    ax.bar(perc_y.index.values, perc_dru_t,
+                bottom = margin_bottom, label=drug, color=cats_drugs_cols[drug], alpha=1)
+    margin_bottom += perc_dru_t
+
+ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
+ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
+
+ax.set_ylabel('%', labelpad=20)
+ax.set_xlabel('Year', labelpad=20)
+ax.set_ylim(0, 100)
+ax.set_xlim([1959, 2019])
+
+ax.set_xticks([1960, 1970, 1980, 1990, 2000, 2010, 2018])
+
+
+ax.spines['left'].set_linewidth(lwD)
+ax.spines['bottom'].set_linewidth(lwD)
+ax.spines['right'].set_linewidth(lwD)
+
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+
+dep = mlines.Line2D([], [], color='#ffa512', label = 'Depressants')
+dis = mlines.Line2D([], [], color='#c1addb', label = 'Dissociatives')
+opi = mlines.Line2D([], [], color='#b7d433', label = 'Opioids')
+sti = mlines.Line2D([], [], color='#ee7f96', label = 'Stimulants')
+can = mlines.Line2D([], [], color='#857fe3', label = 'Cannabinoids')
+psi = mlines.Line2D([], [], color='#87abda', label = 'Psychedelics')
+emp = mlines.Line2D([], [], color='#e9c7df', label = 'Empathogens')
+
+leg = ax.legend(handles=[dep, dis, opi, sti, can, psi, emp][::-1], bbox_to_anchor=(1.05, 0.75), ncol=2)
+
+leg.get_frame().set_facecolor('none')
+leg.get_frame().set_linewidth(0.0)
+
+for lo in leg.legendHandles:
+    lo.set_linewidth(20)
+
+# plt.tight_layout()
+
+name_file = 'time_pie_chart_by_cat'
+plt.savefig('./../figures/dev_write_up/{}.png'.format(name_file), transparent = True, bbox_inches='tight')
+name_file = 'figure5_time_pie_chart_by_cat'
+plt.savefig('./../figures/final_paper/{}.pdf'.format(name_file), transparent = True, bbox_inches='tight')
+
 
 # %% Figure 5 Per countries
 # Top 5 countries
@@ -896,9 +1279,10 @@ def fig_5_countries(dat, years, title, color, y_max, steps, name_file):
     s_bub = 150
 
     for i, z in enumerate(dat):
-        ax.plot(years, dat[z], color=color, label = capited_words[i], alpha = (1 - (1/len(dat.columns))* i), lw = lwD*1.8)
+        print(color[i])
+        ax.plot(years, dat[z], color=color[i], label = capited_words[i], alpha = 1, lw = lwD*1.4)
         # print((1 - (1/len(dat))* i))
-    
+
     ax.set_title(title)
     ax.set_ylabel('Number of publications', labelpad=20)
     ax.set_xlabel('Years', labelpad=20)
@@ -919,7 +1303,7 @@ def fig_5_countries(dat, years, title, color, y_max, steps, name_file):
     ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
     ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
 
-    leg = ax.legend(loc='top left', bbox_to_anchor=(0.38, 0.95))
+    leg = ax.legend(loc='upper left')
     leg.get_frame().set_facecolor('none')
     leg.get_frame().set_linewidth(0.0)
     plt.tight_layout()
@@ -928,66 +1312,72 @@ def fig_5_countries(dat, years, title, color, y_max, steps, name_file):
 
 
 # %% Figure 5 Alcohol
-fig_5_countries(alc_countries, years, 'Alcohol', 'black', 12000, 2000, 'alcohol_countries')
+legal_countries = ['#000000', '#55437d', '#7e6ea2', '#afa5c5', '#dfdbe7']
+sheI_countries = ['#000000', '#286c84', '#70abc0', '#adcfdb', '#eaf3f6']
+sheII_countries = ['#000000', '#3e8560', '#6ac495', '#9cd8b8', '#def2e7']
+sheIII_countries = ['#000000', '#995400', '#ff8c00', '#ffae4c', '#ffdcb2']
+sheIV_countries = ['#000000', '#b29a00', '#ffdc01', '#ffea66', '#fff8cc']
+sheV_countries = ['#000000', '#a34b4b', '#e96c6c', '#f1a6a6', '#fae1e1']
 
-# capiletters(alc_countries)
+# %% Figure 5 Alcohol
+fig_5_countries(alc_countries, years, 'Alcohol', legal_countries, 12000, 2000, 'alcohol_countries')
+
 
 # %% Figure 5 Cannabis
-
 can_countries, years = extract_country_dat('cannabis')
-fig_5_countries(can_countries, years, 'Cannabis', 'black', 2500, 500, 'cannabis_countries')
+fig_5_countries(can_countries, years, 'Cannabis', sheI_countries, 2500, 500, 'cannabis_countries')
 
 # %% Figure 5  ketamine
 ket_countries, years = extract_country_dat('ketamine')
-fig_5_countries(ket_countries, years, 'Ketamine', 'black', 800, 200, 'ketamine_countries')
+fig_5_countries(ket_countries, years, 'Ketamine', sheIII_countries, 800, 200, 'ketamine_countries')
 
 # %% Figure 5  LSD
 lsd_countries, years = extract_country_dat('lsd')
-fig_5_countries(lsd_countries, years, 'LSD', 'black', 120, 20, 'lsd_countries')
+fig_5_countries(lsd_countries, years, 'LSD', sheI_countries, 120, 20, 'lsd_countries')
 
 # %% Figure 5 MDMA
 mdma_countries, years = extract_country_dat('mdma')
-fig_5_countries(mdma_countries, years, 'MDMA', 'black', 160, 20, 'mdma_countries')
+fig_5_countries(mdma_countries, years, 'MDMA', sheI_countries, 160, 20, 'mdma_countries')
 
 # %% SUPPLEMENTARY Figure 1 benzos
 benzos_countries, years = extract_country_dat('benzos')
-fig_5_countries(benzos_countries, years, 'Benzodiazepines', 'black', 800, 200, 'benzos_countries')
+fig_5_countries(benzos_countries, years, 'Benzodiazepines', sheIV_countries, 800, 200, 'benzos_countries')
 
 # %% SUPPLEMENTARY Figure 1 heroin
 heroin_countries, years = extract_country_dat('heroin')
-fig_5_countries(heroin_countries, years, 'Heroin', 'black',800, 200, 'heroin_countries')
+fig_5_countries(heroin_countries, years, 'Heroin', sheI_countries, 800, 200, 'heroin_countries')
 
 # %% SUPPLEMENTARY Figure 1 methamphetamines
 metham_countries, years = extract_country_dat('methamphetamine')
-fig_5_countries(metham_countries, years, 'Methamphetamine', 'black', 800, 200, 'methamphetamine_countries')
+fig_5_countries(metham_countries, years, 'Methamphetamine', sheII_countries, 800, 200, 'methamphetamine_countries')
 
 # %% SUPPLEMENTARY Figure 1 psilocybin
 psilo_countries, years = extract_country_dat('psilocybin')
-fig_5_countries(psilo_countries, years, 'Psilocybin', 'black', 120, 20, 'psilo_countries')
+fig_5_countries(psilo_countries, years, 'Psilocybin', sheI_countries, 120, 20, 'psilo_countries')
 
 # %% SUPPLEMENTARY Figure 1 Khat
 khat_countries, years = extract_country_dat('khat')
-fig_5_countries(khat_countries, years, 'Khat', 'black', 80, 20, 'khat_countries')
+fig_5_countries(khat_countries, years, 'Khat', sheI_countries, 60, 10, 'khat_countries')
 
 # %% SUPPLEMENTARY Figure 1 Methadone
 methadone_countries, years = extract_country_dat('Methadone')
-fig_5_countries(methadone_countries, years, 'Methadone', 'black', 500, 100, 'methadone_countries')
+fig_5_countries(methadone_countries, years, 'Methadone', sheII_countries, 500, 100, 'methadone_countries')
 
 # %% SUPPLEMENTARY Figure 1 GHB
 ghb_countries, years = extract_country_dat('ghb')
-fig_5_countries(ghb_countries, years, 'GHB', 'black', 120, 20, 'ghb_countries')
+fig_5_countries(ghb_countries, years, 'GHB', sheIII_countries, 100, 20, 'ghb_countries')
 
 # %% SUPPLEMENTARY Figure 1 Cocaine
 cocaine_countries, years = extract_country_dat('cocaine')
-fig_5_countries(cocaine_countries, years, 'Cocaine', 'black', 1600, 200, 'cocaine_countries')
+fig_5_countries(cocaine_countries, years, 'Cocaine', sheII_countries, 1600, 200, 'cocaine_countries')
 
 # %% SUPPLEMENTARY Figure 1 Amphetamine
 amphetamine_countries, years = extract_country_dat('amphetamine')
-fig_5_countries(amphetamine_countries, years, 'Amphetamine', 'black', 800, 200, 'amphetamine_countries')
+fig_5_countries(amphetamine_countries, years, 'Amphetamines', sheII_countries, 800, 200, 'amphetamine_countries')
 
 # %% SUPPLEMENTARY Figure 1 Codeine
 codeine_countries, years = extract_country_dat('codeine')
-fig_5_countries(codeine_countries, years, 'Codeine', 'black', 120, 20, 'codeine_countries')
+fig_5_countries(codeine_countries, years, 'Codeine', sheV_countries, 100, 20, 'codeine_countries')
 
 
 # %% 
