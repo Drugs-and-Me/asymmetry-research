@@ -7,3 +7,5 @@ figures/old/
 figures/final_paper/*.svg
 figures/final_paper/*.pptx
 .DS_Store
+data/old
+code/old

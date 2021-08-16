@@ -120,7 +120,7 @@ def fig_2_indv(data, sch_color, max_y, steps, dict_params):
     dict_params[data] = {'r_square': r_square, 'a_init': a, 'g_rate': b}
 
     ax.set_ylabel('Number of publications', labelpad=20)
-    ax.set_xlabel('Years', labelpad=20)
+    ax.set_xlabel('Time (years)', labelpad=20)
     print(np.arange(0, (max_y + 0.1), steps))
 
     ax.set_yticks(np.arange(0, (max_y + 0.1), steps))
@@ -158,7 +158,7 @@ params_sche = {}
 params_sche = fig_2_indv('Alcohol', 'legal', 40000, 5000, params_sche)
 
 # %% wos
-params_sche = fig_2_indv('WoS', 'wos', 3100000, 500000, params_sche)
+params_sche = fig_2_indv('WoS', 'wos', 3500000, 500000, params_sche)
 
 # %% 'Psilocybin'
 params_sche = fig_2_indv('Psilocybin', 'sched_I', 150, 25, params_sche)
@@ -254,7 +254,7 @@ def fig_2_sche(data, color, lineswag, name_file, max_y, steps, dict_params):
         dict_params[z] = {'r_square': r_square, 'a_init': a, 'g_rate': b}
 
     ax.set_ylabel('Number of publications', labelpad=20)
-    ax.set_xlabel('Years', labelpad=20)
+    ax.set_xlabel('Time (years)', labelpad=20)
     print(np.arange(0, (max_y + 0.1), steps))
 
     ax.set_yticks(np.arange(0, (max_y + 0.1), steps))
@@ -322,7 +322,7 @@ def fig_2_drug_cat(data, color, title, name_file, max_y, steps, dict_params):
 
     # ax.set_title(title)
     ax.set_ylabel('Number of publications', labelpad=20)
-    ax.set_xlabel('Years', labelpad=20)
+    ax.set_xlabel('Time (years)', labelpad=20)
     print(np.arange(0, (max_y + 0.1), steps))
 
     ax.set_yticks(np.arange(0, (max_y + 0.1), steps))
@@ -817,7 +817,7 @@ def fig_3_sched(data, color, name_file):
     ax.hlines(0, 1970, 2018, lw = 4, linestyle='--', color ='k')
     # ax.set_title(title)
     ax.set_ylabel('Relative Growth Rate', labelpad=20)
-    ax.set_xlabel('Years', labelpad=20)
+    ax.set_xlabel('Time (decades)', labelpad=20)
 
     ax.set_xticks([1960, 1970, 1980, 1990, 2000, 2010, 2018])
 
@@ -889,7 +889,7 @@ def fig_3_rgr(data, color, title, name_file):
     ax.hlines(0, 1970, 2018, lw = 4, linestyle='--', color = 'k')
     # ax.set_title(title)
     ax.set_ylabel('Relative Growth Rate', labelpad=20)
-    ax.set_xlabel('Years', labelpad=20)
+    ax.set_xlabel('Time (years)', labelpad=20)
 
     ax.set_xticks([1960, 1970, 1980, 1990, 2000, 2010, 2018])
 
@@ -1026,7 +1026,7 @@ ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
 ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
 
 ax.set_ylabel('%', labelpad=20)
-ax.set_xlabel('Year', labelpad=20)
+ax.set_xlabel('Time (years)', labelpad=20)
 ax.set_ylim(0, 100)
 ax.set_xlim([1959, 2019])
 
@@ -1073,7 +1073,7 @@ ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
 ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
 
 ax.set_ylabel('%', labelpad=20)
-ax.set_xlabel('Year', labelpad=20)
+ax.set_xlabel('Time (years)', labelpad=20)
 ax.set_ylim(60, 100)
 ax.set_xlim([1959, 2019])
 
@@ -1122,7 +1122,7 @@ ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
 ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
 
 ax.set_ylabel('%', labelpad=20)
-ax.set_xlabel('Year', labelpad=20)
+ax.set_xlabel('Time (years)', labelpad=20)
 ax.set_ylim(0, 100)
 ax.set_xlim([1959, 2019])
 
@@ -1181,7 +1181,7 @@ ax.yaxis.set_tick_params(width = lwD, length = lenD, pad=15)
 ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
 
 ax.set_ylabel('%', labelpad=20)
-ax.set_xlabel('Year', labelpad=20)
+ax.set_xlabel('Time (years)', labelpad=20)
 ax.set_ylim(0, 100)
 ax.set_xlim([1959, 2019])
 
@@ -1285,7 +1285,7 @@ def fig_5_countries(dat, years, title, color, y_max, steps, name_file):
 
     ax.set_title(title)
     ax.set_ylabel('Number of publications', labelpad=20)
-    ax.set_xlabel('Years', labelpad=20)
+    ax.set_xlabel('Time (years)', labelpad=20)
 
     ax.set_xticks([1960, 1970, 1980, 1990, 2000, 2010, 2018])
 
