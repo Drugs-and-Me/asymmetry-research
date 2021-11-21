@@ -6,6 +6,7 @@ figures/dev_write_up/
 figures/old/
 figures/final_paper/*.svg
 figures/final_paper/*.pptx
+figures/final_paper/*.pdf
 .DS_Store
 data/old
 code/old

@@ -431,13 +431,13 @@ for i, k in enumerate(dict_params.keys()):
     rs_ds[k] = [dict_params[k]['r_square'], dict_params[k]['g_rate'], dict_params[k]['a_init']]
 
 # %%
-order_sched = ['MDMA', 'LSD', 'Heroin', 'Psilocybin', 'Khat', 'Cannabis',
+order_sched = ['Heroin', 'Cannabis', 'Khat', 'Psilocybin', 'LSD',  'MDMA',
 
-                'Cocaine', 'Amphetamines', 'Methamphetamines', 'Methadone',
+                'Methamphetamines', 'Methadone', 'Cocaine',  'Amphetamines',
 
-                'Ketamine', 'GHB', 
-                'Benzodiazepines', 
-                'Codeine', 
+                'Ketamine', 'GHB',
+                'Benzodiazepines',
+                'Codeine',
                 'Alcohol',
                 'WoS']
 
@@ -494,6 +494,15 @@ name_file = 'hbars_r_values_ORD_sched'
 plt.savefig('./../figures/dev_write_up/{}.png'.format(name_file), transparent = True, bbox_inches='tight')
 
 # %%
+order_sched = ['Psilocybin', 'Cannabis', 'Khat', 'LSD', 'Heroin', 'MDMA',
+
+                'Methamphetamines', 'Methadone', 'Cocaine',  'Amphetamines',
+
+                'Ketamine', 'GHB',
+                'Benzodiazepines',
+                'Codeine',
+                'Alcohol',
+                'WoS']
 
 bses_squares_sched = []
 for ore in order_sched:
@@ -1074,7 +1083,7 @@ ax.xaxis.set_tick_params(width = lwD, length = lenD, pad=15)
 
 ax.set_ylabel('%', labelpad=20)
 ax.set_xlabel('Time (years)', labelpad=20)
-ax.set_ylim(60, 100)
+ax.set_ylim(50, 100)
 ax.set_xlim([1959, 2019])
 
 ax.set_xticks([1960, 1970, 1980, 1990, 2000, 2010, 2018])
